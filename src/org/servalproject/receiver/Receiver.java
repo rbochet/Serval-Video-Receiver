@@ -1,4 +1,3 @@
-
 package org.servalproject.receiver;
 
 import java.io.IOException;
@@ -23,9 +22,12 @@ public class Receiver {
 				+ WriterThread.BUFFER_SIZE + ").");
 		ServerSocket serverSocket = new ServerSocket(Receiver.LOCAL_PORT);
 
+		int instanceNumber = 0;
+		
 		while (true) {
 			Socket clientSocket = serverSocket.accept();
-			new WriterThread(clientSocket).start();
+			new WriterThread(clientSocket, instanceNumber).start();
+			instanceNumber++;
 		}
 	}
 }
