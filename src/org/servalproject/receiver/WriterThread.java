@@ -18,6 +18,8 @@ public class WriterThread extends Thread {
 	private static int NbInst;
 	private final int currentNbInst;
 
+	private String fileName;
+
 	public WriterThread(Socket socket) {
 		Calendar calendar = Calendar.getInstance();
 		Date now = calendar.getTime();
@@ -29,6 +31,10 @@ public class WriterThread extends Thread {
 
 		System.out.println("[" + currentTimestamp + "] Created Writer thread #"
 				+ currentNbInst + " : " + socket);
+
+		// Defines the filename f(IP, nbThread)
+		fileName = "chunk-" + socket.getInetAddress().getHostAddress() + "-" + currentNbInst
+				+ ".mp4";
 	}
 
 	@Override
@@ -36,7 +42,7 @@ public class WriterThread extends Thread {
 		try {
 			InputStream inputFromPhone = socket.getInputStream();
 			DataOutputStream fichier = new DataOutputStream(
-					new FileOutputStream("video-" + currentTimestamp + ".mp4"));
+					new FileOutputStream(fileName));
 
 			byte[] buffer = new byte[WriterThread.BUFFER_SIZE];
 			while (true) {
@@ -54,7 +60,8 @@ public class WriterThread extends Thread {
 			}
 
 			System.out.println("[" + currentTimestamp
-					+ "] End of data from the client #" + currentNbInst + " on "+ --NbInst);
+					+ "] End of data from the client #" + currentNbInst
+					+ " on " + --NbInst);
 			fichier.flush();
 			fichier.close();
 			inputFromPhone.close();
